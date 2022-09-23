@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-import socket
-import time
+import socket, time
 from multiprocessing import Pool
 
 HOST = "127.0.0.1"
@@ -12,7 +11,7 @@ Host: {HOST}
 
 """.format(HOST=HOST)
 
-def conn_socket(addr_tup):
+def connection_socket(addr_tup):
     (family, socktype, proto, canonname, sockaddr) = addr_tup
     print(addr_tup)
     try:
@@ -41,12 +40,9 @@ def conn_socket(addr_tup):
 
 def main():
     addr_info = socket.getaddrinfo(HOST, PORT, proto=socket.SOL_TCP)
-    #print(addr_info)
     for addr_tup in addr_info:
         with Pool() as p:
-            p.map(conn_socket, [addr_tup for _ in range(1, 50)])
-        # conn_socket(addr_tup)
-        # only ipv4 I guess
+            p.map(connection_socket, [addr_tup for _ in range(1, 50)])
         break
 
 if __name__ == "__main__":

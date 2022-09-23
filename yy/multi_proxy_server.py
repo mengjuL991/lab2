@@ -12,11 +12,9 @@ addr_info = socket.getaddrinfo("www.google.com", 80, proto=socket.SOL_TCP)
 
 def handle_request(client_conn, addr):
 
-	# Connect to google
 	with socket.socket(family, socktype) as proxy_end:
 		proxy_end.connect(sockaddr)
 
-		# Receive data from client and forward to google
 		client_data = b""
 		while True:
 			data = client_conn.recv(BUFFER_SIZE)
@@ -36,25 +34,18 @@ def handle_request(client_conn, addr):
 
 def main():
 	
-	# Establish a socket for our proxy server
 	with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
-		# Allow port resuse
 		s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-
-		# Bind the socket to the host and port
 		s.bind((HOST, PORT))
-
-		# Listen (wait) for a connection
 		s.listen(1)
 
-		# Accept connections
 		while True:
 			client_conn, addr = s.accept()
 			p = Process(target=handle_request, args=(client_conn, addr))
 			p.daemon = True
 			p.start()
-			print("Started process: ", p)
+			print("Process: ", p)
 
 if __name__ == "__main__":
 	main()
